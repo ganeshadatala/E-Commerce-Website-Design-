@@ -1,0 +1,37 @@
+Ecommerce-Project/
+│
+├── index.html                → Home page
+├── login.html                → User login page
+├── register.html             → User registration
+├── dashboard.html            → User dashboard (products)
+├── cart.html                 → Cart page
+├── checkout.html             → Checkout page
+├── orders.html               → Order history
+├── admin-login.html          → Admin login
+├── admin-dashboard.html      → Admin panel
+│
+├── css/
+│   └── style.css             → Custom styling
+│
+├── js/
+│   ├── auth.js               → Login & register logic
+│   ├── products.js           → Product display, search, filter
+│   ├── cart.js               → Cart functionality
+│   ├── checkout.js           → Payment simulation
+│   ├── orders.js             → Order history logic
+│   ├── admin.js              → Admin panel logic
+│   └── main.js               → Common functions (navbar, routing)
+│
+├── assets/
+│   ├── images/
+│   │   ├── laptop.jpg
+│   │   ├── tshirt.jpg
+│   │   └── shoes.jpg
+│   │
+│   └── icons/
+│
+├── README.md                 → Project description
+└── documentation/
+    ├── Project_Report.docx
+    ├── ER_Diagram.png
+    └── Screenshots/

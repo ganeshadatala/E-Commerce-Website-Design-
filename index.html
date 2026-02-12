@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyShop - Final Year Premium Project</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #f4f6f9;
+            --text: #222;
+            --card: #fff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding-top: 80px;
+            transition: 0.3s;
+        }
+
+        .dark {
+            --bg: #121212;
+            --text: #fff;
+            --card: #1e1e1e;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #141e30, #243b55);
+        }
+
+        .product-card {
+            background: var(--card);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: 0.4s;
+        }
+
+        .product-img:hover {
+            transform: scale(1.1);
+        }
+
+        .stat-card {
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero {
+            text-align: center;
+            margin-top: 100px;
+            animation: fade 1.5s ease;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: #141e30;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #ccc;
+            border-top: 6px solid #00c6ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        footer {
+            background: #141e30;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand">MyShop</a>
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item d-none" id="dashboardNav">
+                    <a class="nav-link" onclick="show('dashboard')">Dashboard</a>
+                </li>
+
+                <li class="nav-item d-none" id="cartNav">
+                    <a class="nav-link" onclick="show('cart')">
+                        Cart (<span id="cartCount">0</span>)
+                    </a>
+                </li>
+
+                <li class="nav-item d-none" id="ordersNav">
+                    <a class="nav-link" onclick="show('orders')">Orders</a>
+                </li>
+
+                <li class="nav-item" id="loginNav">
+                    <a class="nav-link" onclick="show('login')">Login</a>
+                </li>
+
+                <li class="nav-item d-none" id="userNav">
+                    <a class="nav-link text-success">Welcome, <span id="userName"></span></a>
+                </li>
+
+                <li class="nav-item d-none" id="logoutNav">
+                    <a class="nav-link text-danger" onclick="logout()">Logout</a>
+                </li>
+
+                <li class="nav-item">
+                    <button class="btn btn-sm btn-outline-light ms-2" onclick="toggleTheme()">🌙</button>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-warning" onclick="show('adminLogin')">Admin</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- LANDING -->
+        <div id="home" class="section active hero">
+            <h1>Welcome to MyShop</h1>
+            <p>Premium Final Year E-Commerce Project</p>
+            <button class="btn btn-primary" onclick="show('login')">Get Started</button>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="login" class="section">
+            <h3>Login</h3>
+            <form id="loginForm">
+                <input type="email" id="email" class="form-control mb-2" placeholder="Email" required>
+                <input type="password" id="pass" class="form-control mb-2" placeholder="Password" required>
+                <button class="btn btn-dark w-100">Login</button>
+            </form>
+            <p class="mt-2">New User? <a onclick="show('register')" href="#">Register</a></p>
+            <p>Admin? <a onclick="show('adminLogin')" href="#">Admin Login</a></p>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="register" class="section">
+            <h3>Register</h3>
+            <form id="regForm">
+                <input type="text" id="rname" class="form-control mb-2" placeholder="Name" required>
+                <input type="email" id="remail" class="form-control mb-2" placeholder="Email" required>
+                <input type="password" id="rpass" class="form-control mb-2" placeholder="Password" required>
+                <button class="btn btn-success w-100">Register</button>
+            </form>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="section">
+            <h3>Dashboard</h3>
+
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="stat-card bg-primary">
+                        <h5>Total Products</h5>
+                        <h3 id="statProducts"></h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card bg-success">
+                        <h5>Total Orders</h5>
+                        <h3 id="statOrders"></h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="stat-card bg-warning">
+                        <h5>Cart Items</h5>
+                        <h3 id="statCart"></h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input type="text" id="search" class="form-control" placeholder="Search...">
+                </div>
+                <div class="col-md-4">
+                    <select id="filter" class="form-select">
+                        <option value="All">All</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Shoes">Shoes</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" id="productList"></div>
+        </div>
+
+        <!-- CART -->
+        <div id="cart" class="section">
+            <h3>Cart</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="cartTable"></tbody>
+            </table>
+            <h4>Total: $<span id="total"></span></h4>
+            <button class="btn btn-success" onclick="show('checkout')">Checkout</button>
+        </div>
+
+        <!-- CHECKOUT -->
+        <div id="checkout" class="section">
+            <h3>Checkout</h3>
+            <input type="text" id="address" class="form-control mb-2" placeholder="Shipping Address" required>
+            <select id="payment" class="form-select mb-2">
+                <option>Credit Card</option>
+                <option>UPI</option>
+                <option>Net Banking</option>
+                <option>Cash on Delivery</option>
+            </select>
+            <button class="btn btn-primary w-100" onclick="pay()">Pay Now</button>
+        </div>
+
+        <!-- CONFIRMATION -->
+        <div id="confirm" class="section text-center">
+            <h3 class="text-success">Payment Successful 🎉</h3>
+            <p>Order ID: <span id="orderId"></span></p>
+            <button class="btn btn-dark" onclick="show('orders')">View Orders</button>
+        </div>
+
+        <!-- ORDERS -->
+        <div id="orders" class="section">
+            <h3>My Orders</h3>
+            <div id="orderList"></div>
+        </div>
+
+        <!-- ADMIN LOGIN -->
+        <div id="adminLogin" class="section">
+            <h3>Admin Login</h3>
+            <form id="adminForm">
+                <input type="text" id="auser" class="form-control mb-2" placeholder="Username" required>
+                <input type="password" id="apass" class="form-control mb-2" placeholder="Password" required>
+                <button class="btn btn-warning w-100">Login</button>
+            </form>
+        </div>
+
+        <!-- ADMIN DASHBOARD -->
+        <div id="adminDash" class="section">
+            <h3>Admin Panel</h3>
+            <input type="text" id="pname" class="form-control mb-2" placeholder="Product Name">
+            <input type="number" id="pprice" class="form-control mb-2" placeholder="Price">
+            <select id="pcat" class="form-select mb-2">
+                <option>Electronics</option>
+                <option>Clothing</option>
+                <option>Shoes</option>
+            </select>
+            <button class="btn btn-success" onclick="addProduct()">Add Product</button>
+            <hr>
+            <h5>All Orders</h5>
+            <div id="adminOrders"></div>
+        </div>
+
+    </div>
+
+    <footer>© 2026 MyShop | Final Year Premium Project</footer>
+
+    <script>
+        window.onload = () => document.getElementById("loader").style.display = "none";
+
+        function show(id) {
+            document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+            document.getElementById(id).classList.add("active");
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle("dark");
+            localStorage.setItem("theme",
+                document.body.classList.contains("dark") ? "dark" : "light");
+        }
+        if (localStorage.getItem("theme") === "dark")
+            document.body.classList.add("dark");
+
+        let products = JSON.parse(localStorage.getItem("products")) || [
+            {id: 1, name: "Laptop", price: 800, category: "Electronics", img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8"},
+            {id: 2, name: "T-Shirt", price: 120, category: "Clothing", img: "https://images.unsplash.com/photo-1520975916090-3105956dac38"},
+            {id: 3, name: "Shoes", price: 300, category: "Shoes", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff"}
+        ];
+
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        let orders = JSON.parse(localStorage.getItem("orders")) || [];
+        let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+
+        function save() {
+            localStorage.setItem("products", JSON.stringify(products));
+            localStorage.setItem("cart", JSON.stringify(cart));
+            localStorage.setItem("orders", JSON.stringify(orders));
+        }
+
+        function display() {
+            let search = document.getElementById("search").value?.toLowerCase() || "";
+            let filter = document.getElementById("filter").value || "All";
+            let html = "";
+            products.forEach(p => {
+                if ((filter === "All" || p.category === filter) &&
+                    p.name.toLowerCase().includes(search)) {
+                    html += `
+<div class="col-md-4 mb-3">
+<div class="product-card">
+<img src="${p.img}" class="product-img">
+<h5>${p.name}</h5>
+<p>$${p.price}</p>
+<button class="btn btn-dark btn-sm" onclick="addCart(${p.id})">Add to Cart</button>
+</div></div>`;
+                }
+            });
+            document.getElementById("productList").innerHTML = html;
+            document.getElementById("statProducts").innerText = products.length;
+            document.getElementById("statOrders").innerText = orders.length;
+            document.getElementById("statCart").innerText = cart.length;
+        }
+
+        document.getElementById("search")?.addEventListener("input", display);
+        document.getElementById("filter")?.addEventListener("change", display);
+
+        function addCart(id) {
+            let item = cart.find(x => x.id === id);
+            if (item) item.qty++; else cart.push({id, qty: 1});
+            save(); updateCart();
+            alert("Added to cart");
+        }
+
+        function updateCart() {
+            document.getElementById("cartCount").innerText =
+                cart.reduce((a, b) => a + b.qty, 0);
+        }
+
+        function loadCart() {
+            let total = 0, html = "";
+            cart.forEach(c => {
+                let p = products.find(x => x.id === c.id);
+                let sub = p.price * c.qty; total += sub;
+                html += `<tr>
+<td>${p.name}</td>
+<td>$${p.price}</td>
+<td>${c.qty}</td>
+<td>$${sub}</td>
+<td><button onclick="remove(${c.id})" class="btn btn-danger btn-sm">X</button></td>
+</tr>`;
+            });
+            document.getElementById("cartTable").innerHTML = html;
+            document.getElementById("total").innerText = total;
+        }
+
+        function remove(id) {
+            cart = cart.filter(x => x.id !== id);
+            save(); loadCart(); updateCart();
+        }
+
+        function pay() {
+            let id = "ORD" + Date.now();
+            document.getElementById("orderId").innerText = id;
+            orders.push({id, user: currentUser.email, total: document.getElementById("total").innerText, date: new Date().toLocaleString()});
+            cart = []; save(); updateCart();
+            show("confirm");
+        }
+
+        function loadOrders() {
+            let html = "";
+            orders.filter(o => o.user === currentUser.email)
+                .forEach(o => {
+                    html += `<div class="card p-2 mb-2">
+${o.id} - $${o.total} - ${o.date}
+</div>`;
+                });
+            document.getElementById("orderList").innerHTML = html || "No Orders";
+        }
+
+        document.getElementById("regForm").onsubmit = e => {
+            e.preventDefault();
+            users.push({name: rname.value, email: remail.value, password: rpass.value});
+            localStorage.setItem("users", JSON.stringify(users));
+            alert("Registered!"); show("login");
+        };
+
+        document.getElementById("loginForm").onsubmit = e => {
+            e.preventDefault();
+            let user = users.find(u => u.email === email.value && u.password === pass.value);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem("currentUser", JSON.stringify(user));
+                document.getElementById("userName").innerText = user.name;
+                document.getElementById("loginNav").classList.add("d-none");
+                document.getElementById("logoutNav").classList.remove("d-none");
+                document.getElementById("userNav").classList.remove("d-none");
+                document.getElementById("dashboardNav").classList.remove("d-none");
+                document.getElementById("cartNav").classList.remove("d-none");
+                document.getElementById("ordersNav").classList.remove("d-none");
+                display(); updateCart();
+                show("dashboard");
+            } else alert("Invalid Login");
+        };
+
+        function logout() {
+            localStorage.removeItem("currentUser");
+            location.reload();
+        }
+
+        document.getElementById("adminForm").onsubmit = e => {
+            e.preventDefault();
+            if (auser.value === "admin" && apass.value === "1234") {
+                show("adminDash");
+                let html = "";
+                orders.forEach(o => html += `<div>${o.id} - ${o.user} - $${o.total}</div>`);
+                document.getElementById("adminOrders").innerHTML = html;
+            } else alert("Wrong Admin");
+        };
+
+        function addProduct() {
+            products.push({id: Date.now(), name: pname.value, price: parseInt(pprice.value), category: pcat.value, img: "https://via.placeholder.com/300"});
+            save(); alert("Added");
+        }
+    </script>
+
+</body>
+
+</html>
